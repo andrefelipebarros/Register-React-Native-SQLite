@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, TouchableOpacity, Alert } from 'react-native';
 import { useSQLiteContext } from 'expo-sqlite';
-import { StackNavigationProp } from '@react-navigation/stack';
+import type { StackNavigationProp } from '@react-navigation/stack';
 import { loginUser } from '../database/userQueries';
-import { RootStackParamList } from '..';
-import { blue } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
-
+import type { RootStackParamList } from '..';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
@@ -21,10 +19,9 @@ const LoginScreen = ({ navigation }: Props) => {
   const handleLogin = async () => {
     const success = await loginUser(database, username, password);
     if (success) {
-      console.log('Login bem-sucedido!');
-      // Aqui você pode navegar para a próxima tela ou fazer outra ação
+      navigation.navigate("Welcome", { username });
     } else {
-      console.log('Credenciais inválidas.');
+      Alert.alert("Erro ao logar", "As credenciais passadas são inválidas.");
     }
   };
 
