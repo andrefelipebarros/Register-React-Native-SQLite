@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, TouchableOpacity, Alert } from 'react-native';
 import { useSQLiteContext } from 'expo-sqlite';
 import { registerUser } from '../database/userQueries';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../index';
+import type { StackNavigationProp } from '@react-navigation/stack';
+import type { RootStackParamList } from '../index';
 
 type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Register'>;
 
@@ -18,11 +18,11 @@ const RegisterScreen = ({ navigation }: Props) => {
 
   const handleRegister = async () => {
     const success = await registerUser(database, username, password);
+
     if (success) {
-      console.log('Usuário registrado com sucesso!');
-      // Aqui você pode navegar para a próxima tela ou fazer outra ação
+      navigation.navigate("Login");
     } else {
-      console.log('Falha ao registrar usuário.');
+      Alert.alert("Não foi possível registrar", "Um usuário com esse nome já se encontra registrado no sistema.");
     }
   };
 

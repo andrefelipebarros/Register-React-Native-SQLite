@@ -1,11 +1,12 @@
-import { SQLiteDatabase } from "expo-sqlite";
+import type { SQLiteDatabase } from "expo-sqlite";
 
 export async function initializeDatabase(database: SQLiteDatabase) {
     await database.execAsync(`
         CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER,
             username TEXT NOT NULL UNIQUE,
-            password TEXT NOT NULL
+            password TEXT NOT NULL,
+            PRIMARY KEY("id" AUTOINCREMENT)
         );
     `);
 }
