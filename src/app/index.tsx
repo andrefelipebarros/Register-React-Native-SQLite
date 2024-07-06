@@ -4,12 +4,14 @@ import { createStackNavigator } from '@react-navigation/stack';
 import {LoginScreen} from './components/LoginScreen';
 import {RegisterScreen} from './components/RegisterScreen';
 import {WelcomeScreen} from './components/WelcomeScreen';
+import type { IWelcomeUserData } from './interfaces/userData';
 
 export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
-  Welcome: { username: string };
+  Welcome: IWelcomeUserData
 };
+
 
 const Stack = createStackNavigator<RootStackParamList>();
 

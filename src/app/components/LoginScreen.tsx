@@ -17,9 +17,14 @@ const LoginScreen = ({ navigation }: Props) => {
   const database = useSQLiteContext();
 
   const handleLogin = async () => {
-    const success = await loginUser(database, username, password);
-    if (success) {
-      navigation.navigate("Welcome", { username });
+    const result = await loginUser(database, username, password);
+
+    if (result !== undefined) {
+      navigation.navigate("Welcome", {
+        cpf: result.cpf,
+        email: result.email,
+        username: result.username
+      });
     } else {
       Alert.alert("Erro ao logar", "As credenciais passadas são inválidas.");
     }
@@ -33,6 +38,7 @@ const LoginScreen = ({ navigation }: Props) => {
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
+        autoCapitalize='none'
         style={{ borderWidth: 1, borderColor: 'gray', padding: 10, margin: 10, width: 200 }}
       />
       <TextInput
@@ -40,6 +46,7 @@ const LoginScreen = ({ navigation }: Props) => {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        autoCapitalize='none'
         style={{ borderWidth: 1, borderColor: 'gray', padding: 10, margin: 10, width: 200 }}
       />
       <Button title="Login" onPress={handleLogin} />

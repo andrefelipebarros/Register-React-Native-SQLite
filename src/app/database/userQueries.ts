@@ -1,13 +1,16 @@
 import type { SQLiteDatabase } from "expo-sqlite";
-import type { IUserData } from "../interfaces/userData";
+import type { IUserData, IUserRegisterData } from "../interfaces/userData";
 
-export async function registerUser(database: SQLiteDatabase, username: string, password: string): Promise<boolean> {
+export async function registerUser(
+    database: SQLiteDatabase,
+    { username, password, email, cpf }: IUserRegisterData
+): Promise<boolean> {
     const stmt = await database.prepareAsync(`
-        INSERT INTO users (username, password) VALUES (?, ?);`
+        INSERT INTO users (username, password, email, cpf) VALUES (?, ?, ?, ?);`
     );
 
     try {
-        await stmt.executeAsync([username, password]);
+        await stmt.executeAsync([username, password, email, cpf]);
         await stmt.finalizeAsync();
 
         return true;
@@ -17,7 +20,7 @@ export async function registerUser(database: SQLiteDatabase, username: string, p
     }
 }
 
-export async function loginUser(database: SQLiteDatabase, username: string, password: string): Promise<boolean> {
+export async function loginUser(database: SQLiteDatabase, username: string, password: string): Promise<IUserData | undefined> {
     try {
         const stmt = await database.prepareAsync(`
             SELECT * FROM users
@@ -27,13 +30,14 @@ export async function loginUser(database: SQLiteDatabase, username: string, pass
         const execResult = await stmt.executeAsync([username]);
         const data = await execResult.getFirstAsync() as IUserData;
         await stmt.finalizeAsync();
+        
+        if (data && data.password === password) {
+            return data;
+        }
 
-        if (!data)
-            return false;
-
-        return data.password === password;
+        return undefined;
     } catch (error) {
         console.error('Erro ao fazer login:', error);
-        return false; 
+        return undefined; 
     }
 }

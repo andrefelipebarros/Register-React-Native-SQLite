@@ -5,6 +5,8 @@ export async function initializeDatabase(database: SQLiteDatabase) {
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER,
             username TEXT NOT NULL UNIQUE,
+            cpf TEXT NOT NULL UNIQUE,
+            email TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL,
             PRIMARY KEY("id" AUTOINCREMENT)
         );
