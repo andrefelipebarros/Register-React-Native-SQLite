@@ -25,6 +25,9 @@ const RegisterScreen = ({ navigation }: Props) => {
   const cpfMask = "999.999.999-99";
 
   const handleRegister = async () => {
+    setEmail(email.trim());
+    setUsername(username.trim());
+
     if (!isValidEmail(email))
       return Alert.alert("Email inválido", "O email passado é inválido, verifique e tente novamente.");
 

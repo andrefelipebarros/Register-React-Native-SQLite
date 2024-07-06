@@ -22,7 +22,7 @@ const WelcomeScreen = ({ route, navigation }: Props) => {
 
   return (
     <View>
-      <Text>Seja bem-vindo, {username}!</Text>
+      <Text>Seja bem-vindo, <Text style={styles.bold}>{username}</Text>!</Text>
       <Text><Text style={styles.bold}>EMAIL:</Text> {email}</Text>
       <Text><Text style={styles.bold}>CPF:</Text> {cpf}</Text>
       <Button title="Logout" onPress={() => navigation.navigate('Login')} />
