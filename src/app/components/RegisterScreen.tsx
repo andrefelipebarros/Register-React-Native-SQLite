@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, TouchableOpacity, Alert } from 'react-native';
-import { useSQLiteContext } from 'expo-sqlite';
-import { registerUser } from '../database/userQueries';
+import { registerUser } from '../utils/auth-utils';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import type { RootStackParamList } from '../index';
-import { MaskedTextInput } from 'react-native-mask-text';
 import { isValidEmail } from '../validators/isValidEmail';
-import { isValidCpf } from '../validators/isValidCpf';
 
 type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Register'>;
 
@@ -15,26 +12,15 @@ type Props = {
 };
 
 const RegisterScreen = ({ navigation }: Props) => {
-  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  const [cpf, setCpf] = useState('');
-  const [cpfRaw, setCpfRaw] = useState('');
-  const database = useSQLiteContext();
-
-  const cpfMask = "999.999.999-99";
+  const [name, setName] = useState('');
 
   const handleRegister = async () => {
-    setEmail(email.trim());
-    setUsername(username.trim());
-
     if (!isValidEmail(email))
       return Alert.alert("Email inválido", "O email passado é inválido, verifique e tente novamente.");
 
-    if (!isValidCpf(cpf))
-      return Alert.alert("CPF inválido", "O CPF passado é inválido, verifique e tente novamente.");
-
-    const success = await registerUser(database, { username, password, email, cpf: cpfRaw });
+    const success = await registerUser({ email, nome: name, password });
 
     if (success) {
       navigation.navigate("Login");
@@ -46,11 +32,10 @@ const RegisterScreen = ({ navigation }: Props) => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Registro</Text>
-      <View style={{ marginBottom: 20 }} />
       <TextInput
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
+        placeholder="Nome"
+        value={name}
+        onChangeText={setName}
         autoCapitalize='none'
         style={{ borderWidth: 1, borderColor: 'gray', padding: 10, margin: 10, width: 200 }}
       />
@@ -59,17 +44,6 @@ const RegisterScreen = ({ navigation }: Props) => {
         value={email}
         onChangeText={setEmail}
         autoCapitalize='none'
-        style={{ borderWidth: 1, borderColor: 'gray', padding: 10, margin: 10, width: 200 }}
-      />
-      <MaskedTextInput
-        placeholder="CPF"
-        value={cpf}
-        onChangeText={(formatted, raw) => {
-          setCpf(formatted);
-          setCpfRaw(raw);
-        }}
-        mask={cpfMask}
-        keyboardType='numeric'
         style={{ borderWidth: 1, borderColor: 'gray', padding: 10, margin: 10, width: 200 }}
       />
       <TextInput
